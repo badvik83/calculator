@@ -16,13 +16,25 @@ buttons.forEach(button => {
             display.value = '0'; // Clear display
         } else if (value === '=') {
             display.value = operate();
-        } else if (value === '.'){
-            
-        } else if (value === "+/-"){
-
-        } else if (value === "%") {
-            currentNumber /= 100;
+        } else if (value === '.') {
+            currentNumber += '.';
+        } else if (value === "+/-") {
+            if (currentNumber[0] === '-') {
+                currentNumber = currentNumber.slice(1);
+            } else {
+                currentNumber = '-' + currentNumber;
+            }
             display.value = currentNumber;
+        } else if (value === "%") {
+            if (previousNumber === '') {
+                currentNumber = '0';
+                display.value = currentNumber;
+            }
+            else {
+                let percent = parseFloat(previousNumber) * (parseFloat(currentNumber) / 100);
+                currentNumber = percent.toFixed(2).toString();
+                display.value = currentNumber;
+            }
         } else if (value >= '0' && value <= '9') {
             currentNumber += value;
             display.value = currentNumber;
@@ -47,8 +59,7 @@ function operate() {
         case '-':
             result = parseFloat(previousNumber) - parseFloat(currentNumber);
             break;
-        case  
- '*':
+        case '*':
             result = parseFloat(previousNumber) * parseFloat(currentNumber);
             break;
         case '/':
@@ -57,12 +68,13 @@ function operate() {
                 break;
             }
             else {
-            result = parseFloat(previousNumber) / parseFloat(currentNumber);
-            break; }
+                result = parseFloat(previousNumber) / parseFloat(currentNumber);
+                break;
+            }
         default:
             result = currentNumber;
     }
-    currentNumber = result.toString();  
+    currentNumber = result.toString();
 
     return result;
 }
